@@ -5,11 +5,13 @@ import { API_URL } from "@/config/index";
 
 import Layout from "@/components/Layout";
 import EventItem from "@/components/EventItem";
+import Link from "next/link";
 
 export default function SearchEventsPage({ events }) {
   const router = useRouter();
   return (
     <Layout title="Search Results">
+      <Link href="/events"> Go Back</Link>
       <h1>Search Results.</h1>
       <h2>Search Results for : {router.query.term}</h2>
 
@@ -37,5 +39,6 @@ export async function getServerSideProps({ query: { term } }) {
   const events = await res.json();
 
   return {
-    props: { events },  };
+    props: { events },
+  };
 }
