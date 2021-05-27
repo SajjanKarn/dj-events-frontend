@@ -1,11 +1,11 @@
 import qs from "qs";
+import Link from "next/link";
 import { useRouter } from "next/router";
 
 import { API_URL } from "@/config/index";
 
 import Layout from "@/components/Layout";
 import EventItem from "@/components/EventItem";
-import Link from "next/link";
 
 export default function SearchEventsPage({ events }) {
   const router = useRouter();
