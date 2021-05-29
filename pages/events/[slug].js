@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+
 import { API_URL } from "@/config/index";
 
 import Layout from "@/components/Layout";
@@ -11,13 +13,24 @@ import styles from "@/styles/Event.module.css";
 export default function EventPage({ event }) {
   const router = useRouter();
 
-  const deleteEvent = (e) => {
-    console.log("delted.");
+  const deleteEvent = async (e) => {
+    if (confirm("Are you sure ?")) {
+      const res = await fetch(`${API_URL}/events/${event.id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        toast.error("something went wrong.");
+      } else {
+        router.push("/events");
+      }
+    }
   };
 
   return (
     <Layout>
       <div className={styles.event}>
+        <ToastContainer />
         <div className={styles.controls}>
           <Link href={`/events/edit/${event.id}`}>
             <a>
