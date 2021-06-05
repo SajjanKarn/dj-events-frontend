@@ -160,7 +160,7 @@ export default function AddEventsPage({ event, token }) {
       {eventImage ? (
         <Image src={eventImage} height={100} width={170} />
       ) : (
-        <h3>No image uplaoded.</h3>
+        <h3>No image Uploaded.</h3>
       )}
 
       <div>
@@ -169,7 +169,7 @@ export default function AddEventsPage({ event, token }) {
         </button>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <ImageUpload eventId={event.id} imageUploaded={imageUploaded} />
+        <ImageUpload eventId={event.id} imageUploaded={imageUploaded} token={token} />
       </Modal>
     </Layout>
   );
