@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Image from "next/image";
-
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { FaImage } from "react-icons/fa";
@@ -9,13 +8,15 @@ import moment from "moment";
 
 import Layout from "@/components/Layout";
 import Modal from "@/components/Modal";
-import { API_URL } from "@/config/index.js";
-
-import styles from "@/styles/Form.module.css";
-import "react-toastify/dist/ReactToastify.css";
 import ImageUpload from "@/components/ImageUpload";
 
-export default function AddEventsPage({ event }) {
+import { API_URL } from "@/config/index.js";
+import { parseCookie } from "@/helpers/index";
+
+import "react-toastify/dist/ReactToastify.css";
+import styles from "@/styles/Form.module.css";
+
+export default function AddEventsPage({ event, token }) {
   const [values, setValues] = useState({
     name: event.name,
     performers: event.performers,
@@ -48,10 +49,15 @@ export default function AddEventsPage({ event }) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(values),
       });
       if (!res.ok) {
+        if (res.status === 403 || res.status === 401) {
+          toast.error("Unauthorized.");
+          return;
+        }
         toast.error("Something went wrong. 💥");
       } else {
         router.push(`/events/${event.slug}`);
@@ -170,10 +176,12 @@ export default function AddEventsPage({ event }) {
 }
 
 export async function getServerSideProps({ params: { id }, req }) {
+  const { token } = parseCookie(req);
+
   const res = await fetch(`${API_URL}/events/${id}`);
   const event = await res.json();
 
   return {
-    props: { event },
+    props: { event, token },
   };
 }

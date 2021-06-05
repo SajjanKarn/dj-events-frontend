@@ -13,35 +13,10 @@ import styles from "@/styles/Event.module.css";
 export default function EventPage({ event }) {
   const router = useRouter();
 
-  const deleteEvent = async (e) => {
-    if (confirm("Are you sure ?")) {
-      const res = await fetch(`${API_URL}/events/${event.id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        toast.error("something went wrong.");
-      } else {
-        router.push("/events");
-      }
-    }
-  };
-
   return (
     <Layout>
       <div className={styles.event}>
         <ToastContainer />
-        <div className={styles.controls}>
-          <Link href={`/events/edit/${event.id}`}>
-            <a>
-              <FaPencilAlt /> Edit Event
-            </a>
-          </Link>
-          <a href="#" className={styles.delete} onClick={deleteEvent}>
-            <FaTimes /> Delete Event
-          </a>
-        </div>
-
         <span>
           {new Date(event.date).toLocaleDateString("en-US")} at {event.time}
         </span>
@@ -75,26 +50,12 @@ export default function EventPage({ event }) {
   );
 }
 
-export async function getStaticPaths() {
-  const res = await fetch(`${API_URL}/events`);
-  const events = await res.json();
 
-  const paths = events.map((event) => ({
-    params: { slug: event.slug },
-  }));
-
-  return {
-    paths,
-    fallback: false,
-  };
-}
-
-export async function getStaticProps({ params: { slug } }) {
+export async function getServerSideProps({ query: { slug } }) {
   const res = await fetch(`${API_URL}/events?slug=${slug}`);
   const event = await res.json();
 
   return {
     props: { event: event[0] },
-    revalidate: 1,
   };
 }
