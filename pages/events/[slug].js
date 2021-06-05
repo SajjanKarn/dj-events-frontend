@@ -9,6 +9,7 @@ import { API_URL } from "@/config/index";
 import Layout from "@/components/Layout";
 
 import styles from "@/styles/Event.module.css";
+import EventMap from "@/components/EventMap";
 
 export default function EventPage({ event }) {
   const router = useRouter();
@@ -42,6 +43,8 @@ export default function EventPage({ event }) {
         <h3>Venue: {event.venue}</h3>
         <p>{event.address}</p>
 
+        <EventMap event={event} />
+
         <Link href="/events">
           <a className={styles.back}>{"<"} Go Back</a>
         </Link>
@@ -49,7 +52,6 @@ export default function EventPage({ event }) {
     </Layout>
   );
 }
-
 
 export async function getServerSideProps({ query: { slug } }) {
   const res = await fetch(`${API_URL}/events?slug=${slug}`);
