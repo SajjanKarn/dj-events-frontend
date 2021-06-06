@@ -6,10 +6,17 @@ import DashboardEvent from "@/components/DashboardEvent";
 import { API_URL } from "@/config/index";
 import { parseCookie } from "@/helpers/index";
 
+import { useContext } from "react";
+import AuthContext from "@/context/AuthContext";
 import styles from "@/styles/Dashboard.module.css";
 
 export default function Dashboard({ events, token }) {
   const router = useRouter();
+  const { user } = useContext(AuthContext);
+
+  if (!user) {
+    return null
+  }
 
   // delete event.
   const deleteEvent = async (id) => {
@@ -61,9 +68,8 @@ export async function getServerSideProps({ req }) {
     },
   });
   const events = await res.json();
-  events.reverse();
 
   return {
-    props: { events, token },
+    props: { events, token: token || "" },
   };
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
@@ -9,6 +9,7 @@ import { API_URL } from "@/config/index.js";
 
 import styles from "@/styles/Form.module.css";
 import "react-toastify/dist/ReactToastify.css";
+import AuthContext from "@/context/AuthContext";
 
 export default function AddEventsPage({ token }) {
   const [values, setValues] = useState({
@@ -21,6 +22,7 @@ export default function AddEventsPage({ token }) {
     description: "",
   });
 
+  const { user } = useContext(AuthContext);
   const router = useRouter();
 
   const handleInputChange = (event) => {
@@ -147,6 +149,6 @@ export async function getServerSideProps({ req }) {
   const { token } = parseCookie(req);
 
   return {
-    props: { token },
+    props: { token: token || "" },
   };
 }
